@@ -20,27 +20,12 @@ def main():
 
         if op == "1":
             try:
-                prod_id_str = input("ID do produto: ").strip()
-                if not prod_id_str:
-                    print("❌ Você deve informar o ID do produto!\n")
-                    continue
-                
-                prod_id = int(prod_id_str)
-                
-                qtd_str = input("Quantidade: ").strip()
-                qtd = int(qtd_str) if qtd_str else 1
-                
-                if qtd <= 0:
-                    print("❌ Quantidade deve ser maior que zero!\n")
-                    continue
-                
+                prod_id = int(input("ID do produto: ").strip())
+                qtd = int(input("Quantidade: ").strip() or "1")
                 carrinho.adicionar_item(prod_id, qtd)
                 print("✅ Produto adicionado com sucesso!\n")
-                
-            except ValueError:
-                print("❌ Erro: ID ou Quantidade inválidos! Digite apenas números.\n")
             except Exception as e:
-                print(f"❌ Erro inesperado: {e}\n")
+                print(f"❌ Erro: {e}\n")
 
         elif op == "2":
             itens = carrinho.get_itens()
@@ -58,34 +43,31 @@ def main():
                 continue
                 
             print("\nFormas de pagamento:")
-            print("1. PIX")
-            print("2. Dinheiro")
-            print("3. Cartão")
+            print("1. PIX     → 5% desconto")
+            print("2. Dinheiro → 5% desconto")
+            print("3. Cartão   → 5% juros")
             
             try:
                 f = int(input("Escolha: "))
                 forma = [FormaPagamento.PIX, FormaPagamento.DINHEIRO, FormaPagamento.CARTAO][f-1]
+
                 
-                desconto_str = input("Desconto (%) [0]: ").strip()
-                desconto = float(desconto_str) if desconto_str else 0.0
-                
-                venda = Venda(carrinho, forma, desconto=desconto)
+                venda = Venda(carrinho, forma)
+
                 print(f"\nValor Final: R$ {venda.valor_final():,.2f}")
-                
-                if input("Confirmar pagamento? (s/n): ").lower() == 's':
+                print(f"   → {forma.value} | Desconto: {venda.desconto}% | Juros: {venda.juros}%")
+
+                if input("\nConfirmar pagamento? (s/n): ").lower() == 's':
                     resultado = pagamento_servico.processar_pagamento(venda)
-                    
                     if resultado["status"] == "APROVADO":
-                        print(f"Transação: {resultado.get('transacao_id')}")
                         carrinho.limpar()
-                        print("✅ Compra finalizada com sucesso!\n")
+                        print("🎉 Compra finalizada com sucesso!\n")
             except Exception as e:
                 print(f"❌ Erro: {e}\n")
 
         elif op == "0":
             print("Saindo do sistema...")
             break
-
         else:
             print("Opção inválida!\n")
 

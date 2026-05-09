@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Dict
 
 @dataclass
 class Produto:
@@ -7,9 +8,9 @@ class Produto:
     preco: float
     estoque: int
 
-    def to_dict(self):
+    def to_dict(self) -> Dict:
         return self.__dict__
 
     @classmethod
-    def from_dict(cls, data: dict):
+    def from_dict(cls, data: Dict):
         return cls(**data)
