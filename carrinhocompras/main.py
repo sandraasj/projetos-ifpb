@@ -1,18 +1,11 @@
-import sys
-import io
-
-# Força codificação UTF-8 no Windows
-if sys.platform == "win32":
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
-
 from repositorio.produto_repositorio import ProdutoRepositorio
 from modelos.carrinho import Carrinho
 from modelos.venda import Venda, FormaPagamento
 from servicos.pagamento_servico import PagamentoServico
 
 def main():
-    repo = ProdutoRepositorio()
-    carrinho = Carrinho(repo)
+    repositorio = ProdutoRepositorio()
+    carrinho = Carrinho(repositorio)
     pagamento_servico = PagamentoServico()
 
     print("=== SISTEMA DE CARRINHO DE COMPRAS ===\n")
@@ -27,12 +20,27 @@ def main():
 
         if op == "1":
             try:
-                prod_id = int(input("ID do produto: "))
-                qtd = int(input("Quantidade: "))
+                prod_id_str = input("ID do produto: ").strip()
+                if not prod_id_str:
+                    print("❌ Você deve informar o ID do produto!\n")
+                    continue
+                
+                prod_id = int(prod_id_str)
+                
+                qtd_str = input("Quantidade: ").strip()
+                qtd = int(qtd_str) if qtd_str else 1
+                
+                if qtd <= 0:
+                    print("❌ Quantidade deve ser maior que zero!\n")
+                    continue
+                
                 carrinho.adicionar_item(prod_id, qtd)
                 print("✅ Produto adicionado com sucesso!\n")
+                
+            except ValueError:
+                print("❌ Erro: ID ou Quantidade inválidos! Digite apenas números.\n")
             except Exception as e:
-                print(f"❌ Erro: {e}\n")
+                print(f"❌ Erro inesperado: {e}\n")
 
         elif op == "2":
             itens = carrinho.get_itens()
@@ -53,6 +61,7 @@ def main():
             print("1. PIX")
             print("2. Dinheiro")
             print("3. Cartão")
+            
             try:
                 f = int(input("Escolha: "))
                 forma = [FormaPagamento.PIX, FormaPagamento.DINHEIRO, FormaPagamento.CARTAO][f-1]
@@ -65,6 +74,7 @@ def main():
                 
                 if input("Confirmar pagamento? (s/n): ").lower() == 's':
                     resultado = pagamento_servico.processar_pagamento(venda)
+                    
                     if resultado["status"] == "APROVADO":
                         print(f"Transação: {resultado.get('transacao_id')}")
                         carrinho.limpar()
@@ -75,6 +85,10 @@ def main():
         elif op == "0":
             print("Saindo do sistema...")
             break
+
+        else:
+            print("Opção inválida!\n")
+
 
 if __name__ == "__main__":
     main()
