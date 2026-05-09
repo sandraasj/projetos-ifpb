@@ -3,7 +3,7 @@ from modelos.produto import Produto
 from typing import Optional, List
 
 class ProdutoRepositorio:
-    def __init__(self, arquivo="produtos.json"):
+    def __init__(self, arquivo: str = "produtos.json"):
         self.arquivo = arquivo
 
     def listar_todos(self) -> List[Produto]:
@@ -28,6 +28,6 @@ class ProdutoRepositorio:
                 return True
         return False
 
-    def _salvar(self, produtos):
+    def _salvar(self, produtos: List[Produto]):
         with open(self.arquivo, 'w', encoding='utf-8') as f:
             json.dump([p.to_dict() for p in produtos], f, indent=2, ensure_ascii=False)

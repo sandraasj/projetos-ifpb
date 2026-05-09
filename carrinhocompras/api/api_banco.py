@@ -4,12 +4,11 @@ from modelos.venda import Venda
 
 class ApiBanco:
     def processar_pagamento(self, venda: Venda):
-        time.sleep(0.6)  # simula tempo de processamento
+        time.sleep(0.6)
         
-        # Simula falha ocasional
         if random.random() < 0.07:
             return {"status": "RECUSADO", "mensagem": "Pagamento recusado pelo banco"}
-
+        
         return {
             "status": "APROVADO",
             "mensagem": "Pagamento aprovado com sucesso!",

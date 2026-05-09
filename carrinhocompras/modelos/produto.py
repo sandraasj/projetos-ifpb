@@ -11,5 +11,5 @@ class Produto:
         return self.__dict__
 
     @classmethod
-    def from_dict(cls, data):
+    def from_dict(cls, data: dict):
         return cls(**data)
