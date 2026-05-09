@@ -1,0 +1,6 @@
+[
+  {"id": 1, "nome": "Notebook Dell", "preco": 4500.00, "estoque": 8},
+  {"id": 2, "nome": "Mouse Logitech", "preco": 89.90, "estoque": 45},
+  {"id": 3, "nome": "Teclado Mecânico", "preco": 320.00, "estoque": 20},
+  {"id": 4, "nome": "Fone Bluetooth JBL", "preco": 199.90, "estoque": 35}
+]
